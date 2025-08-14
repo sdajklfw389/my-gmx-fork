@@ -6,7 +6,7 @@ echo "=== GMX Local Setup ==="
 # Check if Anvil is running
 if ! pgrep -x "anvil" > /dev/null; then
     echo "Starting Anvil local blockchain..."
-    anvil --port 8545 --host 0.0.0.0 &
+    anvil --port 8545 --host 0.0.0.0 --gas-limit 100000000000000 &
     ANVIL_PID=$!
     echo "Anvil started with PID: $ANVIL_PID"
     sleep 2
@@ -29,7 +29,7 @@ forge build
 # Deploy contracts (with yes to continue on size warnings)
 echo "Deploying GMX contracts to local chain..."
 echo "Note: Some contracts may exceed size limits - this is normal for GMX contracts"
-echo "y" | forge script script/DeployGmx.s.sol:DeployGmx --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast --code-size-limit 100000 --disable-block-gas-limit  # Use 8000% of estimated gas
+echo "y" | forge script script/DeployGmx.s.sol:DeployGmx --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast --code-size-limit 10000000 --gas-estimate-multiplier 4000 # Use 4000% of estimated gas
 
 # Extract the latest Vault address from deployment
 echo ""
